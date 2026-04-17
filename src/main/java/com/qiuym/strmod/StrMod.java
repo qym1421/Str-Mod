@@ -2,6 +2,8 @@ package com.qiuym.strmod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 // import net.minecraft.world.food.FoodProperties;  // 注释：不需要食物
 import net.minecraft.world.item.BlockItem;
@@ -38,19 +40,20 @@ public class StrMod
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 
     // 注册示例方块
-    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
+    public static final RegistryObject<Block> QUARTZ_GLASS = BLOCKS.register("quartz_glass",
             () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
 
     // ========== 物品注册 ==========
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     // 注册方块对应的物品
-    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
-            () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> QUARTZ_GLASS_ITEM = ITEMS.register("quartz_glass",
+            () -> new BlockItem(QUARTZ_GLASS.get(), new Item.Properties()));
 
     // 注册普通物品（示例）
-    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
+    /* public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
             () -> new Item(new Item.Properties()));
+    */
 
     /* ========== 注释：不需要食物系统 ==========
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
@@ -109,7 +112,7 @@ public class StrMod
     {
         // 添加示例方块到建筑方块标签页
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-            event.accept(EXAMPLE_BLOCK_ITEM);
+            event.accept(QUARTZ_GLASS_ITEM);
 
         // 添加示例物品到工具与实用物品标签页（可选）
         // if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
@@ -127,8 +130,12 @@ public class StrMod
     public static class ClientModEvents
     {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> {
+                Block glassBlock = QUARTZ_GLASS.get();
+
+                ItemBlockRenderTypes.setRenderLayer(glassBlock, RenderType.cutout());
+            });
             LOGGER.info("STR HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }

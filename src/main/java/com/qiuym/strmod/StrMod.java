@@ -12,6 +12,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,7 +42,14 @@ public class StrMod
 
     // 注册示例方块
     public static final RegistryObject<Block> QUARTZ_GLASS = BLOCKS.register("quartz_glass",
-            () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.GRASS)
+                    .sound(SoundType.GLASS)
+                    .strength(0.5f)
+                    .noOcclusion()
+                    .explosionResistance(1200f)
+            )
+    );
 
     // ========== 物品注册 ==========
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
